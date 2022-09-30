@@ -4,7 +4,9 @@
 #include <limits.h>
 #include <mach-o/dyld.h>
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import <Foundation/NSExtensionContext.h>
+#import <Appkit/NSOpenPanel.h>
 
 namespace OpenLoco::Platform
 {

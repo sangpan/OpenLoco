@@ -287,37 +287,43 @@ static void CDECL fn_FindClose(Session* data)
 #endif // _NO_LOCO_WIN32_
 
 FORCE_ALIGN_ARG_POINTER
-[[maybe_unused]] static void CDECL fnc0(void)
+//[[maybe_unused]]
+static void CDECL fnc0(void)
 {
     STUB();
 }
 
 FORCE_ALIGN_ARG_POINTER
-[[maybe_unused]] static void CDECL fnc1(int i1)
+//[[maybe_unused]]
+static void CDECL fnc1(int i1)
 {
     STUB();
 }
 
 FORCE_ALIGN_ARG_POINTER
-[[maybe_unused]] static void CDECL fnc2(int i1, int i2)
+//[[maybe_unused]]
+static void CDECL fnc2(int i1, int i2)
 {
     STUB();
 }
 
 FORCE_ALIGN_ARG_POINTER
-[[maybe_unused]] static void STDCALL fn0()
+//[[maybe_unused]]
+static void STDCALL fn0()
 {
     return;
 }
 
 FORCE_ALIGN_ARG_POINTER
-[[maybe_unused]] static void STDCALL fn1(int i1)
+//[[maybe_unused]]
+static void STDCALL fn1(int i1)
 {
     return;
 }
 
 FORCE_ALIGN_ARG_POINTER
-[[maybe_unused]] static void STDCALL fn2(int i1, int i2)
+//[[maybe_unused]]
+static void STDCALL fn2(int i1, int i2)
 {
     STUB();
 }
@@ -445,7 +451,7 @@ static int32_t STDCALL lib_CreateFileA(
         return -1;
     }
 
-    return (int32_t)pFILE;
+    return (intptr_t)pFILE;
 }
 
 FORCE_ALIGN_ARG_POINTER

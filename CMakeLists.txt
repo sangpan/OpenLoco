@@ -19,12 +19,23 @@ if (CCache_FOUND)
 endif (CCache_FOUND)
 
 project(${PROJECT} CXX)
+if (XCODE)
+    if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET)
+        SET (CMAKE_XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET 10.14)
+    endif()
+endif()
 
+
+if (APPLE)
+    set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+    set(VCPKG_OSX_DEPLOYMENT_TARGET "10.14" CACHE STRING "Minimum OS X deployment version" FORCE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14" CACHE STRING "Minimum OS X deployment version" FORCE)
+endif()
 if (APPLE)
     # Detection of this variable seems to fail with CMake.
     # Since we only support 32-bit builds at the moment, fix it this way.
     # TODO: find out a proper fix for this.
-    set(CMAKE_SIZEOF_VOID_P 4)
+    #set(CMAKE_SIZEOF_VOID_P 4)
 endif()
 
 if (CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
@@ -86,7 +97,7 @@ if (STRICT)
     if (MSVC)
         list(APPEND COMMON_COMPILE_OPTIONS /WX)
     else ()
-        list(APPEND COMMON_COMPILE_OPTIONS -Werror)
+#        list(APPEND COMMON_COMPILE_OPTIONS -Werror)
     endif ()
 endif ()
 
@@ -166,8 +177,9 @@ if (UNIX)
     )
     add_custom_target(segfiles DEPENDS ${OLOCO_TEXT} ${OLOCO_DATA})
     if (APPLE)
-        set(LOCO_SEGMENT_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sectcreate loco_text __text \"${OLOCO_TEXT}\" -sectcreate loco_data __data ${OLOCO_DATA} -segaddr loco_data 0x4d7000 -segprot loco_data rwx rwx -segaddr loco_text 0x401000 -segprot loco_text rwx rwx -segaddr __TEXT 0x2000000 -read_only_relocs suppress")
-    else ()
+#        set(LOCO_SEGMENT_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sectcreate loco_text __text \"${OLOCO_TEXT}\" -sectcreate loco_data __data ${OLOCO_DATA} -segaddr loco_data 0x4d7000 -segprot loco_data rwx rwx -segaddr loco_text 0x401000 -segprot loco_text rwx rwx -segaddr __TEXT 0x2000000 -read_only_relocs suppress")
+set(LOCO_SEGMENT_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -read_only_relocs suppress")
+        else ()
         # For Linux we have to use objcopy to wrap regular binaries into a linkable
         # format. We use specific section names which are then referenced in a
         # bespoke linker script so they can be placed at predefined VMAs.
@@ -210,7 +222,9 @@ endif ()
 
 if (NOT MSVC)
     set(PIE_FLAG "-fno-pie")
-    set(TARGET_M "-m32")
+    if (NOT APPLE)
+        set(TARGET_M "-m32")
+    endif()
 endif ()
 
 # Check if a flag exists and add it to the list of compiler (so, not linker) options
@@ -247,6 +261,8 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 find_package(SDL2 REQUIRED)
+set(SDL2_LIBRARIES SDL2::SDL2-static)
+
 if (NOT SDL2_LIBRARIES)
 	if (TARGET SDL2::SDL2-static)
 		set(SDL2_LIBRARIES SDL2::SDL2-static)
@@ -255,7 +271,9 @@ if (NOT SDL2_LIBRARIES)
 	endif()
 endif()
 
-find_package(PNG REQUIRED)
+#find_package(PNG REQUIRED)
+find_package(libpng CONFIG REQUIRED)
+
 if (NOT APPLE AND NOT MSVC)
 	pkg_check_modules(OPENAL REQUIRED openal)
 else()
@@ -316,7 +334,8 @@ target_include_directories(${PROJECT} PUBLIC ${SDL2_INCLUDE_DIRS})
 target_link_libraries(${PROJECT} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT} Threads::Threads)
 target_link_libraries(${PROJECT} ${YAML_CPP_LIBRARIES})
-target_link_libraries(${PROJECT} ${PNG_LIBRARY})
+#target_link_libraries(${PROJECT} ${PNG_LIBRARY})
+target_link_libraries(${PROJECT} png_static)
 target_link_libraries(${PROJECT} ${OPENAL_LIBRARIES})
 
 if (WIN32)
@@ -348,7 +367,31 @@ else ()
 endif()
 
 if (APPLE)
-    target_link_libraries(${PROJECT} "-framework Cocoa")
+    set(CMAKE_C_COMPILER "clang")
+    set(CMAKE_C_COMPILER_TARGET ${triple})
+    set(CMAKE_CXX_COMPILER "clang++")
+    set(CMAKE_CXX_COMPILER_TARGET ${triple})
+
+    set_property(TARGET ${PROJECT} PROPERTY CXX_STANDARD 17)
+
+    find_library(FOUNDATION_LIBRARY Foundation )
+    find_library(COCOA_LIBRARY Cocoa )
+    find_library(APPKIT_LIBRARY AppKit )
+    find_library(ADSUPPORT_LIBRARY AdSupport )
+    find_library(SYSTEMCONFIGURATION_LIBRARY SystemConfiguration )
+    find_library(IOKIT_LIBRARY IOKit )
+
+mark_as_advanced (
+        COCOA_LIBRARY
+        APPKIT_LIBRARY
+        FOUNDATION_LIBRARY
+        ADSUPPORT_LIBRARY
+        SYSTEMCONFIGURATION_LIBRARY
+        IOKIT_LIBRARY)
+set(EXTRA_LIBS ${FOUNDATION_LIBRARY} ${COCOA_LIBRARY} ${APPKIT_LIBRARY}  ${ADSUPPORT_LIBRARY} ${SYSTEMCONFIGURATION_LIBRARY} ${IOKIT_LIBRARY})
+
+target_link_libraries(${PROJECT} ${EXTRA_LIBS})
+
 
     set_target_properties(${PROJECT} PROPERTIES
         MACOSX_BUNDLE ON

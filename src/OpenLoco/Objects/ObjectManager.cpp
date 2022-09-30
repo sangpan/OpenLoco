@@ -592,7 +592,7 @@ namespace OpenLoco::ObjectManager
         _objectRepository[enumValue(loadingHeader.getType())].objects[id] = object;
         auto& extendedHeader = _objectRepository[enumValue(loadingHeader.getType())].objectEntryExtendeds[id];
         extendedHeader = ObjectEntry2{
-            loadingHeader, data.size()
+            loadingHeader, (uint32_t)data.size()
         };
 
         if (!*_isPartialLoaded)

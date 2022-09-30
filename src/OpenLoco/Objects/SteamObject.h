@@ -58,5 +58,5 @@ namespace OpenLoco
         }
     };
 #pragma pack(pop)
-    static_assert(sizeof(SteamObject) == 0x28);
+//    static_assert(sizeof(SteamObject) == 0x28);
 }

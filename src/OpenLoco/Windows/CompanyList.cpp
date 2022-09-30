@@ -681,7 +681,7 @@ namespace OpenLoco::Ui::Windows::CompanyList
                 auto companyId = company.id();
                 auto companyColour = CompanyManager::getCompanyColour(companyId);
 
-                _graphYData[count] = reinterpret_cast<uint32_t>(&company.performanceIndexHistory[0]);
+                _graphYData[count] = reinterpret_cast<uintptr_t>(&company.performanceIndexHistory[0]);
                 _graphDataStart[count] = maxHistorySize - company.historySize;
                 _graphLineColour[count] = Colours::getShade(companyColour, 6);
                 _graphItemId[count] = enumValue(companyId);
@@ -772,7 +772,7 @@ namespace OpenLoco::Ui::Windows::CompanyList
                 auto companyId = company.id();
                 auto companyColour = CompanyManager::getCompanyColour(companyId);
 
-                _graphYData[count] = reinterpret_cast<uint32_t>(&company.cargoUnitsDeliveredHistory[0]);
+                _graphYData[count] = reinterpret_cast<uintptr_t>(&company.cargoUnitsDeliveredHistory[0]);
                 _graphDataStart[count] = maxHistorySize - company.historySize;
                 _graphLineColour[count] = Colours::getShade(companyColour, 6);
                 _graphItemId[count] = enumValue(companyId);
@@ -863,7 +863,7 @@ namespace OpenLoco::Ui::Windows::CompanyList
                 auto companyId = company.id();
                 auto companyColour = CompanyManager::getCompanyColour(companyId);
 
-                _graphYData[count] = reinterpret_cast<uint32_t>(&company.cargoUnitsDistanceHistory[0]);
+                _graphYData[count] = reinterpret_cast<uintptr_t>(&company.cargoUnitsDistanceHistory[0]);
                 _graphDataStart[count] = maxHistorySize - company.historySize;
                 _graphLineColour[count] = Colours::getShade(companyColour, 6);
                 _graphItemId[count] = enumValue(companyId);
@@ -954,7 +954,7 @@ namespace OpenLoco::Ui::Windows::CompanyList
                 auto companyId = company.id();
                 auto companyColour = CompanyManager::getCompanyColour(companyId);
 
-                _graphYData[count] = reinterpret_cast<uint32_t>(&company.companyValueHistory[0]);
+                _graphYData[count] = reinterpret_cast<uintptr_t>(&company.companyValueHistory[0]);
                 _graphDataStart[count] = maxHistorySize - company.historySize;
                 _graphLineColour[count] = Colours::getShade(companyColour, 6);
                 _graphItemId[count] = enumValue(companyId);
@@ -1073,7 +1073,7 @@ namespace OpenLoco::Ui::Windows::CompanyList
 
                 auto colour = _cargoLineColour[i];
 
-                _graphYData[count] = reinterpret_cast<uint32_t>(&_deliveredCargoPayment[i][0]);
+                _graphYData[count] = reinterpret_cast<uintptr_t>(&_deliveredCargoPayment[i][0]);
                 _graphDataStart[count] = 0;
                 _graphLineColour[count] = Colours::getShade(colour, 6);
                 _graphItemId[count] = i;

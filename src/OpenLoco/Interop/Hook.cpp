@@ -192,7 +192,7 @@ namespace OpenLoco::Interop
         int retries = 10;
         while (!done && retries > 0)
         {
-            uint32_t hookaddress = (uint32_t)_hookTableAddress + (_hookTableOffset * kHookByteCount);
+            uintptr_t hookaddress = (uintptr_t)_hookTableAddress + (_hookTableOffset * kHookByteCount);
             uint8_t data[9];
             int32_t i = 0;
             data[i++] = 0xE9; // jmp

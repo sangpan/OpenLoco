@@ -273,7 +273,7 @@ namespace OpenLoco::ObjectManager
 
         // Reset
         reloadAll();
-        if (reinterpret_cast<int32_t>(*_installedObjectList) != -1)
+        if (reinterpret_cast<intptr_t>(*_installedObjectList) != -1)
         {
             free(*_installedObjectList);
         }
@@ -365,7 +365,7 @@ namespace OpenLoco::ObjectManager
         }
         else
         {
-            if (reinterpret_cast<int32_t>(*_installedObjectList) != -1)
+            if (reinterpret_cast<intptr_t>(*_installedObjectList) != -1)
             {
                 free(*_installedObjectList);
             }

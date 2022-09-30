@@ -682,7 +682,7 @@ namespace OpenLoco::Vehicles
         _1135F0A = 0;
         _1135FA6 = 5; // flags
         findAllUsableTrackInBlock(LocationOfInterest{ loc, trackAndDirection._data, company, trackType }, filterFunction, interestMap);
-        if (reinterpret_cast<uint32_t>(transformFunction) != 0xFFFFFFFF)
+        if (reinterpret_cast<uintptr_t>(transformFunction) != 0xFFFFFFFF)
         {
             transformFunction(interestMap);
         }
